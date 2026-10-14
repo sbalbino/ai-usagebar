@@ -297,13 +297,15 @@ export default class AiUsageBarPrefs extends ExtensionPreferences {
         settings.bind('refresh-interval', interval, 'value', Gio.SettingsBindFlags.DEFAULT);
         data.add(interval);
 
-        const vendorList = ['anthropic', 'openai', 'zai', 'openrouter', 'deepseek', 'antigravity'];
-        const vendor = new Adw.ComboRow({
-            title: _('Top bar vendor'),
-            subtitle: _('Which provider the top bar shows. The menu lists every enabled provider.'),
-            model: Gtk.StringList.new(vendorList),
+        // A list, so free text: anthropic, openai, zai, openrouter, deepseek,
+        // antigravity. Applied on Enter, not per keystroke, since every change
+        // rebuilds the panel indicators.
+        const vendor = new Adw.EntryRow({
+            title: _('Top bar vendors (comma-separated, e.g. anthropic,openai)'),
+            text: settings.get_string('vendor'),
+            show_apply_button: true,
         });
-        bindCombo(settings, 'vendor', vendor, vendorList);
+        vendor.connect('apply', () => settings.set_string('vendor', vendor.text.trim()));
         data.add(vendor);
 
         const binPath = new Adw.EntryRow({title: _('Binary path (empty = auto)')});

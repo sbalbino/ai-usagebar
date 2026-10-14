@@ -69,7 +69,7 @@ mkdir -p "$DEST" && cp -r * "$DEST"/      # or: ln -s "$PWD" "$DEST"
 | Show percentage | on | numeric `%` next to each bar |
 | Bar width | 8 | cells per bar (4–20) |
 | Refresh interval | 30 s | 5–3600 |
-| Top bar vendor | `anthropic` | Top bar only. Selectors: Claude, Codex, Z.AI, OpenRouter, DeepSeek, Antigravity. The click menu lists every enabled provider from `usage --json`. |
+| Top bar vendors | `anthropic` | Top bar only. Comma-separated list, one indicator per provider, marked by its brand icon (e.g. `anthropic,openai`). Accepted: `anthropic`, `openai`, `zai`, `openrouter`, `deepseek`, `antigravity`. The click menu lists every enabled provider from `usage --json`. |
 | Panel pools | `both` | two-pool vendors only: `both`, first pool, second pool, or `auto` |
 | Auto threshold | 95 % | `auto` switches pools once the shown one reaches this usage |
 | Binary path | auto | empty = `PATH` then `~/.cargo/bin` |

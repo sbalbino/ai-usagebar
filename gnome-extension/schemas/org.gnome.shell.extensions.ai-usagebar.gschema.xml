@@ -11,7 +11,7 @@
 
     <key name="vendor" type="s">
       <default>'anthropic'</default>
-      <summary>Provider shown in the top bar. The click menu lists every enabled provider.</summary>
+      <summary>Providers shown in the top bar, comma-separated (one indicator each). The click menu lists every enabled provider.</summary>
     </key>
 
     <key name="binary-path" type="s">
