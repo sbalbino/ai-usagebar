@@ -17,8 +17,8 @@ import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
-import {barMarkup, colorForPct, disambiguateTags, field, FIELD, FORMAT, hasUsageWindows, integer,
-    isGrouped, MARKER, markerElapsed, plainTextFromPango, selectPools,
+import {barMarkup, colorForDelta, colorForPct, disambiguateTags, field, FIELD, FORMAT, hasUsageWindows, integer,
+    isGrouped, MARKER, markerElapsed, paceGlyph, plainTextFromPango, selectPools,
     splitFormatOutput} from './marker-logic.js';
 import {commandFailure, errorLine, parseReport, summarize} from './report-model.js';
 
@@ -608,13 +608,16 @@ class AiUsageBarIndicator extends PanelMenu.Button {
         const showBars = this._settings.get_boolean('show-bars');
 
         const seg = (tag, pct, valueText, elapsed) => {
+            // Without bars there is no pace marker, so the value carries the
+            // pace instead: colored by usage minus elapsed, with its arrow.
+            const paced = !showBars && Number.isFinite(elapsed);
+            const color = paced ? colorForDelta(pct - elapsed, colors) : colorForPct(pct, colors);
+            const text = paced ? `${valueText}${paceGlyph(pct - elapsed)}` : valueText;
             const toks = [`<span foreground="${DIM}">${tag}</span>`];
-            if (showPct)
-                toks.push(`<span foreground="${colorForPct(pct, colors)}">${esc(valueText)}</span>`);
+            if (showPct || !showBars) // never render an empty segment
+                toks.push(`<span foreground="${color}">${esc(text)}</span>`);
             if (showBars)
                 toks.push(barMarkup(pct, w, colors, elapsed));
-            if (!showPct && !showBars) // never render an empty segment
-                toks.push(`<span foreground="${colorForPct(pct, colors)}">${esc(valueText)}</span>`);
             return toks.join(' ');
         };
 

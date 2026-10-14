@@ -244,7 +244,7 @@ export default class AiUsageBarPrefs extends ExtensionPreferences {
 
         const showBars = new Adw.SwitchRow({
             title: _('Show bars'),
-            subtitle: _('off = numbers only, no bars'),
+            subtitle: _('off = numbers with a pace arrow (↓ under, → on, ↑ ahead), no bars'),
         });
         settings.bind('show-bars', showBars, 'active', Gio.SettingsBindFlags.DEFAULT);
         display.add(showBars);

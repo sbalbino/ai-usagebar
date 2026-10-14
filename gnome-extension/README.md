@@ -129,7 +129,10 @@ Pace markers need a real reset and the elapsed share of the window. The top
 bar uses the `{*_reset}` / `{*_elapsed}` fields and its existing point-delta
 colors. The menu computes marker positions from `reset_at` and `window_secs`,
 which Rust supplies for windows of an exact length. Without both, it draws no
-marker. Menu fills use the report's severity; countdowns use the absolute
+marker. With bars off, the top bar moves the pace into the value: the
+percentage is colored by usage minus elapsed, with the same point-delta bands,
+and followed by `↓` (more than 10 points under), `→` (within 10 under), or
+`↑` (ahead). Menu fills use the report's severity; countdowns use the absolute
 reset time. The panel's final `__aiub_end__` literal receives any stale suffix
 so that the preceding elapsed field remains numeric.
 
