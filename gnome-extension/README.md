@@ -30,9 +30,7 @@ the same as upstream. To get the fork's layout, switch on more than one
 provider under **Top bar vendors**, turn **Show bars** off, and turn **Pace
 arrows** on:
 
-```
-[Claude icon] 5h 16%↓  7d 3%→    [Codex icon] 5h 57%↓  7d 40%↑
-```
+![GNOME top bar with Claude and Codex indicators, each led by its brand icon, showing pace-colored percentages with arrows](../screenshots/gnome-multi-vendor-pace.png)
 
 The pace is usage minus the elapsed share of the window, on the same bands as
 the bar's pace marker: `↓` more than 10 points under (low color), `→` within
