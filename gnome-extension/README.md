@@ -1,7 +1,7 @@
 # AI Usage Bar — GNOME Shell extension
 
 A native GNOME top-panel indicator for [`ai-usagebar`](../README.md). It puts
-one provider's **5-hour session** and **weekly** usage bars next to the
+each chosen provider's **5-hour session** and **weekly** usage next to the
 clock/network. Its native click menu lists every provider enabled in
 `config.toml`, in native submenus with the windows and details the binary reports.
 
@@ -10,6 +10,49 @@ Wayland-only (Sway/Hyprland) and can't dock into the GNOME top bar, so this
 extension bridges the gap by shelling out to the same `ai-usagebar` binary and
 drawing the bars with native `St` widgets. The panel is rendered by GNOME; no
 GNOME screenshot is currently bundled.
+
+## What this fork changes
+
+This copy is the [`sbalbino/ai-usagebar`](https://github.com/sbalbino/ai-usagebar)
+fork of [`akitaonrails/ai-usagebar`](https://github.com/akitaonrails/ai-usagebar).
+Only the GNOME extension differs; the `ai-usagebar` binary is upstream's, unchanged.
+
+| | Upstream | This fork |
+|---|---|---|
+| Providers in the top bar | One, picked from a dropdown | Several side by side, one indicator each, picked with a switch per provider |
+| Telling indicators apart | Not needed | Each indicator starts with the provider's brand icon |
+| Display with bars off | Plain percentages | Plain percentages, or, with **Pace arrows** on, percentages colored by pace and followed by `↓` / `→` / `↑` |
+| `vendor` setting | A single vendor id | A comma-separated list (`anthropic,openai`); a single id still works |
+| New setting | — | `show-pace` (off by default) |
+
+With the defaults (one provider, bars on, pace arrows off) the top bar looks
+the same as upstream. To get the fork's layout, switch on more than one
+provider under **Top bar vendors**, turn **Show bars** off, and turn **Pace
+arrows** on:
+
+```
+[Claude icon] 5h 16%↓  7d 3%→    [Codex icon] 5h 57%↓  7d 40%↑
+```
+
+The pace is usage minus the elapsed share of the window, on the same bands as
+the bar's pace marker: `↓` more than 10 points under (low color), `→` within
+10 under (mid), `↑` ahead (high, or critical from 10 points ahead). The
+extension computes it from `{*_pct}` and `{*_elapsed}`, because the binary
+fills `{*_pace}` for Claude only.
+
+The same settings from the command line (the schema ships with the extension,
+hence `--schemadir`):
+
+```bash
+S="--schemadir $HOME/.local/share/gnome-shell/extensions/ai-usagebar@akitaonrails.github.io/schemas"
+gsettings $S set org.gnome.shell.extensions.ai-usagebar vendor 'anthropic,openai'
+gsettings $S set org.gnome.shell.extensions.ai-usagebar show-bars false
+gsettings $S set org.gnome.shell.extensions.ai-usagebar show-pace true
+```
+
+The fork keeps upstream's extension UUID, so it replaces an installed upstream
+copy rather than running beside it. Updating means merging upstream into the
+fork's branch and reinstalling from it.
 
 ## Vendor scope
 

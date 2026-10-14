@@ -8,6 +8,13 @@ compatible. It keeps claudebar's Pango tooltip, Omarchy theme detection, and
 flock-protected OAuth refresh while adding more providers and a testable Rust
 codebase.
 
+> **About this fork.** This is [`sbalbino/ai-usagebar`](https://github.com/sbalbino/ai-usagebar),
+> a fork of [`akitaonrails/ai-usagebar`](https://github.com/akitaonrails/ai-usagebar).
+> Only the GNOME extension changes: several providers side by side in the top
+> bar, each marked by its brand icon, and an optional pace-arrow display in
+> place of bars. See [What this fork changes](gnome-extension/README.md#what-this-fork-changes).
+> Everything else, including the binary, is upstream's.
+
 ![Native Omarchy Quattro panel showing Z.AI quota usage, reset countdowns, and provider tabs](screenshots/omarchy-quattro-panel.png)
 
 ![Native Omarchy Quattro settings page showing the primary-provider selector and API-key controls](screenshots/omarchy-quattro-settings.png)
