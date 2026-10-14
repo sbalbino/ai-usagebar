@@ -244,10 +244,19 @@ export default class AiUsageBarPrefs extends ExtensionPreferences {
 
         const showBars = new Adw.SwitchRow({
             title: _('Show bars'),
-            subtitle: _('off = numbers with a pace arrow (↓ under, → on, ↑ ahead), no bars'),
+            subtitle: _('off = numbers only, no bars'),
         });
         settings.bind('show-bars', showBars, 'active', Gio.SettingsBindFlags.DEFAULT);
         display.add(showBars);
+
+        const showPace = new Adw.SwitchRow({
+            title: _('Pace arrows'),
+            subtitle: _('With bars off: color each value by pace and add ↓ under, → on, ↑ ahead'),
+        });
+        settings.bind('show-pace', showPace, 'active', Gio.SettingsBindFlags.DEFAULT);
+        settings.bind('show-bars', showPace, 'sensitive', Gio.SettingsBindFlags.GET |
+            Gio.SettingsBindFlags.INVERT_BOOLEAN);
+        display.add(showPace);
 
         const barWidth = new Adw.SpinRow({
             title: _('Width of each bar (cells)'),
@@ -297,16 +306,25 @@ export default class AiUsageBarPrefs extends ExtensionPreferences {
         settings.bind('refresh-interval', interval, 'value', Gio.SettingsBindFlags.DEFAULT);
         data.add(interval);
 
-        // A list, so free text: anthropic, openai, zai, openrouter, deepseek,
-        // antigravity. Applied on Enter, not per keystroke, since every change
-        // rebuilds the panel indicators.
-        const vendor = new Adw.EntryRow({
-            title: _('Top bar vendors (comma-separated, e.g. anthropic,openai)'),
-            text: settings.get_string('vendor'),
-            show_apply_button: true,
+        // One switch per provider; each one switched on gets its own top bar
+        // indicator, in this order. Stored as the comma-separated `vendor` list.
+        const vendorList = ['anthropic', 'openai', 'zai', 'openrouter', 'deepseek', 'antigravity'];
+        const vendors = new Adw.ExpanderRow({
+            title: _('Top bar vendors'),
+            subtitle: _('One indicator per provider switched on. The menu lists every enabled provider.'),
         });
-        vendor.connect('apply', () => settings.set_string('vendor', vendor.text.trim()));
-        data.add(vendor);
+        const enabledVendors = () => settings.get_string('vendor').split(',').map(v => v.trim());
+        const vendorRows = vendorList.map(v => {
+            const row = new Adw.SwitchRow({title: v, active: enabledVendors().includes(v)});
+            row.connect('notify::active', () => {
+                const chosen = vendorList.filter((x, i) => vendorRows[i].active);
+                if (chosen.join(',') !== settings.get_string('vendor'))
+                    settings.set_string('vendor', chosen.join(','));
+            });
+            vendors.add_row(row);
+            return row;
+        });
+        data.add(vendors);
 
         const binPath = new Adw.EntryRow({title: _('Binary path (empty = auto)')});
         settings.bind('binary-path', binPath, 'text', Gio.SettingsBindFlags.DEFAULT);

@@ -82,7 +82,12 @@
 
     <key name="show-bars" type="b">
       <default>true</default>
-      <summary>Draw the bars; when off, show the percentages with a pace arrow colored by pace</summary>
+      <summary>Draw the bars; when off, show only the percentages</summary>
+    </key>
+
+    <key name="show-pace" type="b">
+      <default>false</default>
+      <summary>With bars off, color each value by pace and follow it with a pace arrow</summary>
     </key>
 
     <key name="color-low" type="s">

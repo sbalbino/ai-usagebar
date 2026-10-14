@@ -165,7 +165,7 @@ class AiUsageBarIndicator extends PanelMenu.Button {
 
         // Re-render cached data when any display setting changes (no refetch).
         const viewKeys = [
-            'bar-width', 'show-percent', 'show-bars', 'show-session',
+            'bar-width', 'show-percent', 'show-bars', 'show-pace', 'show-session',
             'show-weekly', 'show-extra', 'color-low', 'color-mid',
             'color-high', 'color-critical', 'color-empty',
             'panel-pools', 'panel-auto-threshold',
@@ -606,11 +606,13 @@ class AiUsageBarIndicator extends PanelMenu.Button {
         const w = Math.max(4, Math.min(20, this._settings.get_int('bar-width')));
         const showPct = this._settings.get_boolean('show-percent');
         const showBars = this._settings.get_boolean('show-bars');
+        const showPace = !showBars && this._settings.get_boolean('show-pace');
 
         const seg = (tag, pct, valueText, elapsed) => {
-            // Without bars there is no pace marker, so the value carries the
-            // pace instead: colored by usage minus elapsed, with its arrow.
-            const paced = !showBars && Number.isFinite(elapsed);
+            // Pace mode: without bars there is no pace marker, so the value
+            // carries the pace instead, colored by usage minus elapsed, with
+            // its arrow.
+            const paced = showPace && Number.isFinite(elapsed);
             const color = paced ? colorForDelta(pct - elapsed, colors) : colorForPct(pct, colors);
             const text = paced ? `${valueText}${paceGlyph(pct - elapsed)}` : valueText;
             const toks = [`<span foreground="${DIM}">${tag}</span>`];
